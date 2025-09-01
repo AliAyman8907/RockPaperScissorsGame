@@ -18,7 +18,10 @@ x86/
 *.VC.db
 *.VC.opendb
 ipch/
+<<<<<<< HEAD
 .vs/
+=======
+>>>>>>> 71a038a8291ac4cdd3cb54982063e45c2b8feb3c
 
 # Logs
 *.log
@@ -65,4 +68,8 @@ ipch/
 !*.sln
 !*.vcxproj
 !*.vcxproj.filters
+<<<<<<< HEAD
 !README.md
+=======
+!README.md
+>>>>>>> 71a038a8291ac4cdd3cb54982063e45c2b8feb3c
