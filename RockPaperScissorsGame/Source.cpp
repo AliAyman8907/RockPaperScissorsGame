@@ -20,6 +20,13 @@ short numOfRounds() {
 	{
 		cout << "How many rounds (1 to 10) ? ";
 		cin >> gameRounds;
+		while (cin.fail())
+		{
+			cin.clear();
+			cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+			cout << "Invalid number, Enter a valid one : ";
+			cin >> gameRounds;
+		}
 	} while (gameRounds < 1 || gameRounds > 10);
 	return gameRounds;
 }
