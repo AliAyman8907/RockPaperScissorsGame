@@ -5,61 +5,62 @@
 
 using namespace std;
 
-short gameRounds = 0, playerWonTimes = 0, computerWonTimes = 0, drawTimes = 0;
-
 enum enChoice { Rock = 1, Paper = 2, Scissors = 3 };
 
 enum enWinner { Draw, Player, Computer };
+
+struct GameStats {
+	short gameRounds = 0;
+	short playerWonTimes = 0;
+	short computerWonTimes = 0;
+	short drawTimes = 0;
+};
+
+void resetGameStats(GameStats& stats) {
+	stats = GameStats();
+}
 
 short randomNum(short from, short to) {
 	return rand() % (to - from + 1) + from;
 }
 
-short numOfRounds() {
-	do
-	{
-		cout << "How many rounds (1 to 10) ? ";
-		cin >> gameRounds;
+short numOfRounds(GameStats& stats) {
+		cout << "How many rounds ? ";
+		cin >> stats.gameRounds;
 		while (cin.fail())
 		{
 			cin.clear();
 			cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 			cout << "Invalid number, Enter a valid one : ";
-			cin >> gameRounds;
+			cin >> stats.gameRounds;
 		}
-	} while (gameRounds < 1 || gameRounds > 10);
-	return gameRounds;
+	return stats.gameRounds;
 }
 
 enChoice playerChoice() {
 	short choice;
-	cout << "Your choice: [1]:Rock, [2]:Paper, [3]:Scissors ? ";
-	cin >> choice;
-	switch (choice)
-	{
-	case 1: return enChoice::Rock;
-	case 2: return enChoice::Paper;
-	case 3: return enChoice::Scissors;
-	}
+		cout << "Your choice: [1]:Rock, [2]:Paper, [3]:Scissors ? ";
+		cin >> choice;
+		while (cin.fail() || choice < 1 || choice > 3) {
+			cin.clear();
+			cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+			cout << "Invalid choice, Enter 1, 2, or 3 : ";
+			cin >> choice;
+		}
+	return static_cast<enChoice>(choice);
 }
 
 enChoice computerChoice() {
-	switch (randomNum(enChoice::Rock, enChoice::Scissors))
-	{
-	case 1: return enChoice::Rock;
-	case 2: return enChoice::Paper;
-	case 3: return enChoice::Scissors;
-	}
+	return static_cast<enChoice>(randomNum(enChoice::Rock, enChoice::Scissors));
 }
 
 enWinner theWinner(enChoice player, enChoice computer) {
 	if (player == computer) return enWinner::Draw;
-	else if (player == enChoice::Rock && computer == enChoice::Paper)      return enWinner::Computer;
-	else if (player == enChoice::Rock && computer == enChoice::Scissors)   return enWinner::Player;
-	else if (player == enChoice::Paper && computer == enChoice::Rock)      return enWinner::Player;
-	else if (player == enChoice::Paper && computer == enChoice::Scissors)  return enWinner::Computer;
-	else if (player == enChoice::Scissors && computer == enChoice::Rock)   return enWinner::Computer;
-	else/*(player == enChoice::Scissors && computer == enThePlay::Paper)*/ { return enWinner::Player; }
+	if ((player == enChoice::Rock && computer == enChoice::Scissors) ||
+		(player == enChoice::Paper && computer == enChoice::Rock) ||
+		(player == enChoice::Scissors && computer == enChoice::Paper))
+		return enWinner::Player;
+	return enWinner::Computer;
 }
 
 string returnChoice(enChoice choice) {
@@ -68,6 +69,7 @@ string returnChoice(enChoice choice) {
 	case enChoice::Rock:     return "Rock";
 	case enChoice::Paper:    return "Paper";
 	case enChoice::Scissors: return "Scissors";
+	default: return "Unknown";
 	}
 }
 
@@ -77,6 +79,7 @@ string returnWinner(enWinner winner) {
 	case enWinner::Draw:     return "Draw";
 	case enWinner::Player:   return "Player";
 	case enWinner::Computer: return "Computer";
+	default: return "Unknown";
 	}
 }
 
@@ -88,7 +91,7 @@ void printRoundScreen(short round, enChoice player, enChoice computer) {
 	cout << "\n____________________________________________________\n" << endl;
 }
 
-void roundScreen(short round) {
+void roundScreen(short round, GameStats& stats) {
 	cout << "\nRound [" << round << "] begins:\n\n";
 	enChoice player = playerChoice();
 	enChoice computer = computerChoice();
@@ -96,19 +99,19 @@ void roundScreen(short round) {
 	switch (theWinner(player, computer))
 	{
 	case enWinner::Draw: {
-		drawTimes++;
+		stats.drawTimes++;
 		system("color 6F");
 		break;
 	}
 
 	case enWinner::Player: {
-		playerWonTimes++;
+		stats.playerWonTimes++;
 		system("color 2F");
 		break;
 	}
 
 	case enWinner::Computer: {
-		computerWonTimes++;
+		stats.computerWonTimes++;
 		system("color 4F");
 		cout << "\a";
 		break;
@@ -116,42 +119,43 @@ void roundScreen(short round) {
 	}
 }
 
-void printRoundsScreen() {
-	short rounds = numOfRounds();
+void printRoundsScreen(GameStats& stats) {
+	short rounds = numOfRounds(stats);
 	for (int i = 1; i <= rounds; i++)
 	{
-		roundScreen(i);
+		roundScreen(i, stats);
 
 	}
 }
 
-void printFinalResults() {
+void printFinalResults(GameStats& stats) {
 	cout << "\t\t\t\t_____________________________________________________________________\n\n";
 	cout << "\t\t\t\t                      +++ G a m e   O v e r +++\n\n";
 	cout << "\t\t\t\t_____________________________________________________________________\n\n";
 	cout << "\t\t\t\t____________________________[Game Results]___________________________\n\n";
-	cout << "\t\t\t\tGame rounds        : " << gameRounds << "\n";
-	cout << "\t\t\t\tPlayer won times   : " << playerWonTimes << "\n";
-	cout << "\t\t\t\tComputer won times : " << computerWonTimes << "\n";
-	cout << "\t\t\t\tDraw times         : " << drawTimes << "\n";
+	cout << "\t\t\t\tGame rounds        : " << stats.gameRounds << "\n";
+	cout << "\t\t\t\tPlayer won times   : " << stats.playerWonTimes << "\n";
+	cout << "\t\t\t\tComputer won times : " << stats.computerWonTimes << "\n";
+	cout << "\t\t\t\tDraw times         : " << stats.drawTimes << "\n";
 	cout << "\t\t\t\tFinal winner       : ";
-	(playerWonTimes == computerWonTimes) ? cout << "No Winner\n" :
-		(playerWonTimes > computerWonTimes) ? cout << "Player\n" : cout << "Computer\n";
+	(stats.playerWonTimes == stats.computerWonTimes) ? cout << "No Winner\n" :
+		(stats.playerWonTimes > stats.computerWonTimes) ? cout << "Player\n" : cout << "Computer\n";
 	cout << "\n\t\t\t\t_____________________________________________________________________\n" << endl;
 }
 
 void RockPaperScissorsGame() {
 	srand((unsigned)time(NULL));
+	GameStats stats;
 	char playAgain;
-	printRoundsScreen();
-	printFinalResults();
-	cout << "Do you want to play again? Y/N? ";
-	cin >> playAgain;
-	if (toupper(playAgain) == 'Y') {
+	do {
+		resetGameStats(stats);
+		printRoundsScreen(stats);
+		printFinalResults(stats);
+		cout << "Do you want to play again? Y/N? ";
+		cin >> playAgain;
 		system("cls");
 		system("color 07");
-		RockPaperScissorsGame();
-	}
+	} while (toupper(playAgain) == 'Y');
 }
 
 int main() {
