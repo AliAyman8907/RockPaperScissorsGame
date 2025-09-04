@@ -16,10 +16,6 @@ struct GameStats {
 	short drawTimes = 0;
 };
 
-void resetGameStats(GameStats& stats) {
-	stats = GameStats();
-}
-
 short randomNum(short from, short to) {
 	return rand() % (to - from + 1) + from;
 }
@@ -126,21 +122,31 @@ void printRoundsScreen(GameStats& stats) {
 		roundScreen(i, stats);
 
 	}
+	cout << "Press any button to move to Final Results Screen...";
+	system("pause>0");
 }
 
+void printCentered(string text) {
+	short columns = 132;
+	short padding = (columns - text.size()) / 2;
+	if (padding > 0) cout << string(padding, ' ');
+	cout << text;
+}
 void printFinalResults(GameStats& stats) {
-	cout << "\t\t\t\t_____________________________________________________________________\n\n";
-	cout << "\t\t\t\t                      +++ G a m e   O v e r +++\n\n";
-	cout << "\t\t\t\t_____________________________________________________________________\n\n";
-	cout << "\t\t\t\t____________________________[Game Results]___________________________\n\n";
-	cout << "\t\t\t\tGame rounds        : " << stats.gameRounds << "\n";
-	cout << "\t\t\t\tPlayer won times   : " << stats.playerWonTimes << "\n";
-	cout << "\t\t\t\tComputer won times : " << stats.computerWonTimes << "\n";
-	cout << "\t\t\t\tDraw times         : " << stats.drawTimes << "\n";
-	cout << "\t\t\t\tFinal winner       : ";
-	(stats.playerWonTimes == stats.computerWonTimes) ? cout << "No Winner\n" :
-		(stats.playerWonTimes > stats.computerWonTimes) ? cout << "Player\n" : cout << "Computer\n";
-	cout << "\n\t\t\t\t_____________________________________________________________________\n" << endl;
+	system("cls");
+	system("color 07");
+	printCentered("_____________________________________________________________________"); cout << "\n\n";
+	printCentered("+++ G a m e   O v e r +++"); cout << "\n";
+	printCentered("_____________________________________________________________________"); cout << "\n\n";
+	printCentered("____________________________[Game Results]___________________________"); cout << "\n\n";
+	printCentered("Game rounds        : "); cout << stats.gameRounds << "\n";
+	printCentered("Player won times   : "); cout << stats.playerWonTimes << "\n";
+	printCentered("Computer won times : "); cout << stats.computerWonTimes << "\n";
+	printCentered("Draw times         : "); cout << stats.drawTimes << "\n";
+	printCentered("Final winner       : ");
+	(stats.playerWonTimes == stats.computerWonTimes) ? cout << "No Winner\n\n" :
+		(stats.playerWonTimes > stats.computerWonTimes) ? cout << "Player\n\n" : cout << "Computer\n\n";
+	printCentered("_____________________________________________________________________"); cout << "\n" << endl;
 }
 
 void RockPaperScissorsGame() {
@@ -148,7 +154,7 @@ void RockPaperScissorsGame() {
 	GameStats stats;
 	char playAgain;
 	do {
-		resetGameStats(stats);
+		stats = {};
 		printRoundsScreen(stats);
 		printFinalResults(stats);
 		cout << "Do you want to play again? Y/N? ";
