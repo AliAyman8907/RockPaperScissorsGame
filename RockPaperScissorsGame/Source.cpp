@@ -2,6 +2,7 @@
 #include<string>
 #include<cstdlib>
 #include<ctime>
+#include"MyLib.h";
 
 using namespace std;
 
@@ -126,27 +127,21 @@ void printRoundsScreen(GameStats& stats) {
 	system("pause>0");
 }
 
-void printCentered(string text) {
-	short columns = 132;
-	short padding = (columns - text.size()) / 2;
-	if (padding > 0) cout << string(padding, ' ');
-	cout << text;
-}
 void printFinalResults(GameStats& stats) {
 	system("cls");
 	system("color 07");
-	printCentered("_____________________________________________________________________"); cout << "\n\n";
-	printCentered("+++ G a m e   O v e r +++"); cout << "\n";
-	printCentered("_____________________________________________________________________"); cout << "\n\n";
-	printCentered("____________________________[Game Results]___________________________"); cout << "\n\n";
-	printCentered("Game rounds        : "); cout << stats.gameRounds << "\n";
-	printCentered("Player won times   : "); cout << stats.playerWonTimes << "\n";
-	printCentered("Computer won times : "); cout << stats.computerWonTimes << "\n";
-	printCentered("Draw times         : "); cout << stats.drawTimes << "\n";
-	printCentered("Final winner       : ");
+	MyLib::printCentered("_____________________________________________________________________"); cout << "\n\n";
+	MyLib::printCentered("+++ G a m e   O v e r +++"); cout << "\n";
+	MyLib::printCentered("_____________________________________________________________________"); cout << "\n\n";
+	MyLib::printCentered("____________________________[Game Results]___________________________"); cout << "\n\n";
+	MyLib::printCentered("Game rounds        : "); cout << stats.gameRounds << "\n";
+	MyLib::printCentered("Player won times   : "); cout << stats.playerWonTimes << "\n";
+	MyLib::printCentered("Computer won times : "); cout << stats.computerWonTimes << "\n";
+	MyLib::printCentered("Draw times         : "); cout << stats.drawTimes << "\n";
+	MyLib::printCentered("Final winner       : ");
 	(stats.playerWonTimes == stats.computerWonTimes) ? cout << "No Winner\n\n" :
 		(stats.playerWonTimes > stats.computerWonTimes) ? cout << "Player\n\n" : cout << "Computer\n\n";
-	printCentered("_____________________________________________________________________"); cout << "\n" << endl;
+	MyLib::printCentered("_____________________________________________________________________"); cout << "\n" << endl;
 }
 
 void RockPaperScissorsGame() {
